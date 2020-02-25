@@ -24,3 +24,6 @@ for script in /entrypoint.d/*; do
     source "$script"
   fi
 done
+
+# ensure launch of systemd init
+exec /usr/sbin/init
