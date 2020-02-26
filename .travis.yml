@@ -7,4 +7,4 @@ before_script:
   - docker build -f Containerfile --tag systemd:test .
 
 script:
-    - dgoss run --env-file test/unit-test-service.env systemd:test /entrypoint.sh /usr/bin/sleep infinity
+    - GOSS_FILES_PATH=test dgoss run --env-file test/unit-test-service.env systemd:test /entrypoint.sh /usr/bin/sleep infinity
