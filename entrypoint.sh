@@ -19,3 +19,5 @@ for script in /entrypoint.d/*; do
     source "$script"
   fi
 done
+
+exec "$@"

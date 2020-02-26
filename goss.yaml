@@ -1,0 +1,21 @@
+file:
+  /etc/systemd/system/example.service:
+    exists: true
+    mode: "0644"
+    owner: root
+    group: root
+    filetype: file
+    contains:
+      - '[Unit]'
+      - 'Description='
+      - 'Documentation='
+      - '[Service]'
+      - 'ExecStart='
+      - 'User='
+      - 'Group='
+      - '[Install]'
+      - 'WantedBy='
+service:
+  example:
+    enabled: true
+    running: false

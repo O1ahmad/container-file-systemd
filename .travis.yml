@@ -1,0 +1,10 @@
+---
+services:
+  - docker
+
+before_script:
+  - sudo curl -fsSL https://goss.rocks/install | sudo sh
+  - docker build -f Containerfile --tag systemd:test .
+
+script:
+    - dgoss run --env-file test/unit-test-service.env systemd:test /entrypoint.sh /usr/bin/sleep infinity
