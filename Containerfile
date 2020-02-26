@@ -1,4 +1,4 @@
-FROM centos:8 as unit_config
+FROM ${OS_VERSION} as unit_config
 
 # Create directory for storage of additional entrypoint scripts
 RUN mkdir /entrypoint.d
