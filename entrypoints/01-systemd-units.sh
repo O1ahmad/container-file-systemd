@@ -49,3 +49,6 @@ do
     echo "$property_name=${!property_value}" >> $full_unit_path
   fi
 done
+
+systemctl enable $systemd_name.$systemd_type
+systemctl start $systemd_name.$systemd_type
