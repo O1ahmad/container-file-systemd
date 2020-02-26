@@ -51,4 +51,3 @@ do
 done
 
 systemctl enable $systemd_name.$systemd_type
-systemctl start $systemd_name.$systemd_type
