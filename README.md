@@ -116,13 +116,13 @@ Manages daemons and the processes they consist of.
 #### Example
 
 ```bash
-   SYSTEMD_NAME=example
-   # SYSTEMD_PATH=/etc/systemd/system
-   # SYSTEMD_TYPE=service
-   
-   UNIT_Description=Sleepy service
-   SERVICE_ExecStart=/usr/bin/sleep infinity
-   INSTALL_WantedBy=multi-user.target
+ SYSTEMD_NAME=example
+ # SYSTEMD_PATH=/etc/systemd/system
+ # SYSTEMD_TYPE=service
+
+ UNIT_Description=Sleepy service
+ SERVICE_ExecStart=/usr/bin/sleep infinity
+ INSTALL_WantedBy=multi-user.target
  ```
  
 **[[Socket](http://man7.org/linux/man-pages/man5/systemd.socket.5.html)]**
@@ -132,16 +132,16 @@ Encapsulates local IPC or network sockets in the system.
 #### Example
 
 ```bash
-  SYSTEMD_NAME=docker
-  SYSTEM_TYPE=socket
+ SYSTEMD_NAME=docker
+ SYSTEM_TYPE=socket
   
-  UNIT_Description=Listens/accepts connection requests at /var/run/docker/sock (implicitly *Requires=* associated docker.service)
-  SOCKET_ListenStream=/var/run/docker.sock
-  SOCKET_SocketMode=0660
-  SOCKET_SocketUser=root
-  SOCKET_SocketGroup=root
+ UNIT_Description=Listens/accepts connection requests at /var/run/docker/sock (implicitly *Requires=* associated docker.service)
+ SOCKET_ListenStream=/var/run/docker.sock
+ SOCKET_SocketMode=0660
+ SOCKET_SocketUser=root
+ SOCKET_SocketGroup=root
   
-  INSTALL_WantedBy=sockets.target
+ INSTALL_WantedBy=sockets.target
  ```
 
 **[[Mount](http://man7.org/linux/man-pages/man5/systemd.mount.5.html)]**
@@ -151,18 +151,18 @@ Controls mount points in the sytem.
 #### Example
 
 ```bash
-  SYSTEMD_NAME=tmp_new
-  SYSTEM_TYPE=mount
+ SYSTEMD_NAME=tmp_new
+ SYSTEM_TYPE=mount
   
-  UNIT_Description=New Temporary Directory (/tmp_new)
-  UNIT_Conflicts=umount.target
-  UNIT_Before=local-fs.target umount.target
-  UNIT_After=swap.target
+ UNIT_Description=New Temporary Directory (/tmp_new)
+ UNIT_Conflicts=umount.target
+ UNIT_Before=local-fs.target umount.target
+ UNIT_After=swap.target
   
-  MOUNT_What=tmpfs
-  MOUNT_Where=/tmp_new
-  MOUNT_Type=tmpfs
-  MOUNT_Options=mode=1777,strictatime,nosuid,nodev
+ MOUNT_What=tmpfs
+ MOUNT_Where=/tmp_new
+ MOUNT_Type=tmpfs
+ MOUNT_Options=mode=1777,strictatime,nosuid,nodev
  ```
 
 **[[Automount](http://man7.org/linux/man-pages/man5/systemd.automount.5.html)]**
@@ -172,16 +172,16 @@ Provides automount capabilities for on-demand mounting of file systems as well a
 #### Example
 
 ```bash
-  SYSTEMD_NAME=proc-sys-fs-binfmt_misc
-  SYSTEMD_TYPE=automount
+ SYSTEMD_NAME=proc-sys-fs-binfmt_misc
+ SYSTEMD_TYPE=automount
   
-  UNIT_Description=Arbitrary Executable File Formats File System Automount Point
-  UNIT_Documentation=https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html
-  UNIT_ConditionPathExists=/proc/sys/fs/binfmt_misc/
-  UNIT_ConditionPathIsReadWrite=/proc/sys/
+ UNIT_Description=Arbitrary Executable File Formats File System Automount Point
+ UNIT_Documentation=https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html
+ UNIT_ConditionPathExists=/proc/sys/fs/binfmt_misc/
+ UNIT_ConditionPathIsReadWrite=/proc/sys/
   
-  AUTOMOUNT_Where=/proc/sys/fs/binfmt_misc
- ```
+ AUTOMOUNT_Where=/proc/sys/fs/binfmt_misc
+```
 
 **[[Device](http://man7.org/linux/man-pages/man5/systemd.device.5.html)]**
 
@@ -208,17 +208,17 @@ This unit type has no specific options and as such a separate `[Target]` section
 #### Example
 
 ```bash
-  SYSTEMD_NAME=graphical
-  SYSTEMD_PATH=/usr/lib/systemd/system/graphical.target
-  SYSTEMD_TYPE=target
+ SYSTEMD_NAME=graphical
+ SYSTEMD_PATH=/usr/lib/systemd/system/graphical.target
+ SYSTEMD_TYPE=target
   
-  UNIT_Description=Graphical Interface
-  UNIT_Documentation=man:systemd.special(7)
-  UNIT_Requires=multi-user.target
-  UNIT_Wants=display-manager.service
-  UNIT_Conflicts=rescue.service rescue.target
-  UNIT_After=multi-user.target rescue.service rescue.target display-manager.service
-  UNIT_AllowIsolate-yes
+ UNIT_Description=Graphical Interface
+ UNIT_Documentation=man:systemd.special(7)
+ UNIT_Requires=multi-user.target
+ UNIT_Wants=display-manager.service
+ UNIT_Conflicts=rescue.service rescue.target
+ UNIT_After=multi-user.target rescue.service rescue.target display-manager.service
+ UNIT_AllowIsolate-yes
 ```
 
 **[[Timer](http://man7.org/linux/man-pages/man5/systemd.timer.5.html)]**
@@ -228,15 +228,15 @@ Triggers activation of other units based on timers.
 #### Example
 
 ```bash
-  SYSTEMD_NAME=dnf-makecache
-  SYSTEMD_TYPE=timer
+ SYSTEMD_NAME=dnf-makecache
+ SYSTEMD_TYPE=timer
   
-  TIMER_OnBootSec=10min
-  TIMER_OnUnitInactiveSec=1h
-  TIMER_Unit=dnf-makecache.service
+ TIMER_OnBootSec=10min
+ TIMER_OnUnitInactiveSec=1h
+ TIMER_Unit=dnf-makecache.service
   
-  INSTALL_WantedBy=multi-user.target
- ```
+ INSTALL_WantedBy=multi-user.target
+```
 
 **[[Swap](http://man7.org/linux/man-pages/man5/systemd.swap.5.html)]**
 
@@ -244,7 +244,7 @@ Encapsulates memory swap partitions or files of the operating system.
 
 #### Example
 
- ```yaml
+ ```bash
   # Ensure existence of swap file
   mkdir -p /var/vm
   fallocate -l 1024m /var/vm/swapfile
@@ -253,12 +253,12 @@ Encapsulates memory swap partitions or files of the operating system.
 
 ------------------------------------
 
-  SYSTEMD_NAME=var-vm-swap
-  SYSTEM_TYPE=swap
+ SYSTEMD_NAME=var-vm-swap
+ SYSTEM_TYPE=swap
   
-  UNIT_Description=Turn on swap for /var/vm/swapfile
-  SWAP_What=/var/vm/swapfile
-  INSTALL_WantedBy=multi-user.target
+ UNIT_Description=Turn on swap for /var/vm/swapfile
+ SWAP_What=/var/vm/swapfile
+ INSTALL_WantedBy=multi-user.target
 ```
 
 **[[Path](http://man7.org/linux/man-pages/man5/systemd.path.5.html)]**
@@ -268,14 +268,14 @@ Activates other services when file system objects change or are modified.
 #### Example
 
 ```bash
-  SYSTEMD_NAME=Repository Code Coverage Analysis trigger
-  SYSTEMD_TYPE=path
+ SYSTEMD_NAME=Repository Code Coverage Analysis trigger
+ SYSTEMD_TYPE=path
   
-  UNIT_Description=Activate code coverage analysis on modified git repositories
+ UNIT_Description=Activate code coverage analysis on modified git repositories
   
-  PATH_PathChanged=/path/to/git/repo
-  PATH_UNIT=code-coverage-analysis
- ```
+ PATH_PathChanged=/path/to/git/repo
+ PATH_UNIT=code-coverage-analysis
+```
 
 **[[Scope](http://man7.org/linux/man-pages/man5/systemd.scope.5.html)]**
 
@@ -286,17 +286,17 @@ Manages a set of system or foreign/remote processes.
 #### Example
 
 ```bash
-  SYSTEMD_NAME=user-session
-  SYSTEMD_TYPE=scope
+ SYSTEMD_NAME=user-session
+ SYSTEMD_TYPE=scope
   
-  UNIT_Description=Session of user
-  UNIT_Wants=user-runtime-dir@1000.service user@1000.service
-  UNIT_After=systemd-logind.service systemd-user-sessions.service user-runtime-dir@1000.service user@1000.service
-  UNIT_RequiresMountsFor=/home/user
+ UNIT_Description=Session of user
+ UNIT_Wants=user-runtime-dir@1000.service user@1000.service
+ UNIT_After=systemd-logind.service systemd-user-sessions.service user-runtime-dir@1000.service user@1000.service
+ UNIT_RequiresMountsFor=/home/user
   
-  SCOPE_SendSIGHUP=yes
-  SCOPE_TasksMax=infinity
- ```
+ SCOPE_SendSIGHUP=yes
+ SCOPE_TasksMax=infinity
+```
 
 **[[Slice](http://man7.org/linux/man-pages/man5/systemd.slice.5.html)]**
 
