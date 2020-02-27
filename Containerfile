@@ -1,7 +1,7 @@
 # specific OS distribution to utilize as base image
 ARG OS_VERSION=centos:7
 
-FROM $OS_VERSION
+FROM $OS_VERSION as unit_config
 
 # Create directory for storage of additional entrypoint scripts
 RUN mkdir /entrypoint.d
