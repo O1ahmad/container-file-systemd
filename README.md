@@ -322,7 +322,7 @@ podman run \
   --env SERVICE_Restart=on-failure \
   --env INSTALL_WantedBy=multi-user.target \
   --volume /path/to/app/repo:/app
-  0labs.0x01.systemd:centos-7 \
+  0labs/0x01.systemd:centos-7 \
   systemctl start example-microservice
 ```
 
