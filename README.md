@@ -75,20 +75,19 @@ _The following variables can be customized to control various aspects of install
  INSTALL_WantedBy=multi-user.target
 ```
 
-`[unit_config: <config-list-entry>:] type: <string>` (**default**: `service`)
+`$SYSTEMD_TYPE` (**default**: `service`)
 - type of systemd unit to configure. There are currently 11 different unit types, ranging from daemons and the processes they consist of to path modification triggers. Consult [systemd(1)](http://man7.org/linux/man-pages/man1/systemd.1.html) for the full list of available units.
 
 #### Example
 
- ```yaml
-  unit_config:
-    - name: apache
-      type: socket
-      Socket:
-        ListenStream: 0.0.0.0:8080
-        Accept: yes
-      Install:
-        WantedBy: sockets.target
+ ```bash
+ SYSTEMD_NAME=apache
+ SYSTEMD_TYPE=socket
+ 
+ SOCKET_ListenStream=0.0.0.0:8080
+ SOCKET_Accept=yes
+ 
+ INSTALL_WantedBy=sockets.target
 ```
 
 #### Config
