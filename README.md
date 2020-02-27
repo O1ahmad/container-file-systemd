@@ -102,7 +102,7 @@ Configuration of a `systemd` unit is declared in an [ini-style](https://en.wikip
 
 Each configuration section definition provides a dict containing a set of key-value pairs for corresponding section options (e.g. the `ExecStart` specification for a system or web service `[Service]` section or the `ListenStream` option for a web `[Socket]` section).
 
-`{UNIT, <unit-type e.g. SERVICE, SOCKET, DEVICE>, INSTALL}_<config-key>=<config-value>` (**default**: undefined)
+`${UNIT, <unit-type e.g. SERVICE, SOCKET, DEVICE>, INSTALL}_<config-key>=<config-value>` (**default**: undefined)
 - section definitions for a unit configuration
 
 Any configuration setting/value key-pair supported by the corresponding *Systemd* unit type specification should be expressible within each `envvar` and properly rendered within the associated *INI* config.
