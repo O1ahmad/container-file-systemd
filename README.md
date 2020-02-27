@@ -19,12 +19,17 @@ Container File:vertical_traffic_light:Systemd
   - [License](#license)
   - [Author Information](#author-information)
 
-Container file that installs and configures **Systemd** [units](http://man7.org/linux/man-pages/man5/systemd.unit.5.html): system components and services managed by the Linux `systemd` system/service manager. Note that **only** *unit type* `service` is currently supported and sensible for this choice of provisioning.
+Container file that installs and configures **Systemd** [units](http://man7.org/linux/man-pages/man5/systemd.unit.5.html): system components and services managed by the Linux `systemd` system/service manager.
 
 ##### Supported Platforms:
 ```
 * Redhat(CentOS/Fedora)
+* Debian
 ```
+
+Requirements
+------------
+Requires a *Systemd* capable container runtime (e.g. [Podman](https://podman.io/)).
 
 Environment Variables
 --------------
@@ -308,7 +313,7 @@ None
 
 Example Run
 ----------------
-default example (no custom unit configurations specified):
+run a microservice:
 ```
 podman run \
   --env SYSTEMD_NAME=example-microservice \
@@ -316,6 +321,7 @@ podman run \
   --env SERVICE_ExecStart=/app/bin/service --config /path/to/config \
   --env SERVICE_Restart=on-failure \
   --env INSTALL_WantedBy=multi-user.target \
+  --volume /path/to/app/repo:/app
   0labs.0x01.systemd:centos-7 \
   systemctl start example-microservice
 ```
