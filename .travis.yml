@@ -10,7 +10,6 @@ jobs:
     - env: OS_VERSION=fedora:30
     - env: OS_VERSION=fedora:31
     - env: OS_VERSION=debian:8
-    - env: OS_VERSION=debian:9
 
 before_script:
   - sudo curl -fsSL https://goss.rocks/install | sudo sh
