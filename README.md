@@ -5,7 +5,7 @@ Container File:vertical_traffic_light:Systemd
 =========
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/0x0I/container-file-systemd?color=yellow)
 [![Build Status](https://travis-ci.org/0x0I/container-file-systemd.svg?branch=master)](https://travis-ci.org/0x0I/container-file-systemd)
-![Docker Pulls](https://img.shields.io/docker/pulls/0labs/0x01.systemd?style=flat)
+[![Docker Pulls](https://img.shields.io/docker/pulls/0labs/0x01.systemd?style=flat)](https://hub.docker.com/repository/docker/0labs/0x01.systemd)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blueviolet.svg)](https://opensource.org/licenses/MIT)
 
 **Table of Contents**
@@ -97,10 +97,10 @@ Configuration of a `systemd` unit is declared in an [ini-style](https://en.wikip
 
 Each configuration section definition provides a dict containing a set of key-value pairs for corresponding section options (e.g. the `ExecStart` specification for a system or web service `[Service]` section or the `ListenStream` option for a web `[Socket]` section).
 
-`[unit_config: <list-entry>:] Unit | <unit-type e.g. Service, Socket, Device or Mount> | Install: <dict>` (**default**: {})
+`{UNIT, <unit-type e.g. SERVICE, SOCKET, DEVICE>, INSTALL}_<config-key>=<config-value>` (**default**: undefined)
 - section definitions for a unit configuration
 
-Any configuration setting/value key-pair supported by the corresponding *Systemd* unit type specification should be expressible within each `unit_config` collection and properly rendered within the associated *INI* config.
+Any configuration setting/value key-pair supported by the corresponding *Systemd* unit type specification should be expressible within each `envvar` and properly rendered within the associated *INI* config.
 
 _The following provides an overview and example configuration of each unit type for reference_.
 
@@ -110,37 +110,34 @@ Manages daemons and the processes they consist of.
 
 #### Example
 
- ```yaml
-  unit_config:
-    # path: /etc/systemd/system/example-service.service
-    - name: example-service
-      Unit:
-        Description: Sleepy service
-      Service:
-        ExecStart: /usr/bin/sleep infinity
-      Install:
-        WantedBy: multi-user.target
-```
+```bash
+   SYSTEMD_NAME=example
+   # SYSTEMD_PATH=/etc/systemd/system
+   # SYSTEMD_TYPE=service
+   
+   UNIT_Description=Sleepy service
+   SERVICE_ExecStart=/usr/bin/sleep infinity
+   INSTALL_WantedBy=multi-user.target
+ ```
+ 
 **[[Socket](http://man7.org/linux/man-pages/man5/systemd.socket.5.html)]**
 
 Encapsulates local IPC or network sockets in the system.
 
 #### Example
 
- ```yaml
-  unit_config:
-    - name: docker
-      type: socket
-      Unit:
-        Description: Listens/accepts connection requests at /var/run/docker/sock (implicitly *Requires=* associated docker.service)
-      Socket:
-        ListenStream: /var/run/docker.sock
-        SocketMode: 0660
-        SockerUser: root
-        SocketGroup: docker
-      Install:
-        WantedBy: sockets.target
-```
+```bash
+  SYSTEMD_NAME=docker
+  SYSTEM_TYPE=socket
+  
+  UNIT_Description=Listens/accepts connection requests at /var/run/docker/sock (implicitly *Requires=* associated docker.service)
+  SOCKET_ListenStream=/var/run/docker.sock
+  SOCKET_SocketMode=0660
+  SOCKET_SocketUser=root
+  SOCKET_SocketGroup=root
+  
+  INSTALL_WantedBy=sockets.target
+ ```
 
 **[[Mount](http://man7.org/linux/man-pages/man5/systemd.mount.5.html)]**
 
@@ -148,21 +145,20 @@ Controls mount points in the sytem.
 
 #### Example
 
- ```yaml
-  unit_config:
-    - name: tmp_new
-      type: mount
-      Unit:
-        Description: New Temporary Directory (/tmp_new)
-        Conflicts: umount.target
-        Before: local-fs.target umount.target
-        After: swap.target
-      Mount:
-        What: tmpfs
-        Where: /tmp_new
-        Type: tmpfs
-        Options: mode=1777,strictatime,nosuid,nodev
-```
+```bash
+  SYSTEMD_NAME=tmp_new
+  SYSTEM_TYPE=mount
+  
+  UNIT_Description=New Temporary Directory (/tmp_new)
+  UNIT_Conflicts=umount.target
+  UNIT_Before=local-fs.target umount.target
+  UNIT_After=swap.target
+  
+  MOUNT_What=tmpfs
+  MOUNT_Where=/tmp_new
+  MOUNT_Type=tmpfs
+  MOUNT_Options=mode=1777,strictatime,nosuid,nodev
+ ```
 
 **[[Automount](http://man7.org/linux/man-pages/man5/systemd.automount.5.html)]**
 
@@ -170,18 +166,17 @@ Provides automount capabilities for on-demand mounting of file systems as well a
 
 #### Example
 
- ```yaml
-  unit_config:
-    - name: proc-sys-fs-binfmt_misc
-      type: automount
-      Unit:
-        Description: Arbitrary Executable File Formats File System Automount Point
-        Documentation: https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html
-        ConditionPathExists: /proc/sys/fs/binfmt_misc/
-        ConditionPathIsReadWrite: /proc/sys/
-      Automount:
-        Where: /proc/sys/fs/binfmt_misc
-```
+```bash
+  SYSTEMD_NAME=proc-sys-fs-binfmt_misc
+  SYSTEMD_TYPE=automount
+  
+  UNIT_Description=Arbitrary Executable File Formats File System Automount Point
+  UNIT_Documentation=https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.html
+  UNIT_ConditionPathExists=/proc/sys/fs/binfmt_misc/
+  UNIT_ConditionPathIsReadWrite=/proc/sys/
+  
+  AUTOMOUNT_Where=/proc/sys/fs/binfmt_misc
+ ```
 
 **[[Device](http://man7.org/linux/man-pages/man5/systemd.device.5.html)]**
 
@@ -207,19 +202,18 @@ This unit type has no specific options and as such a separate `[Target]` section
 
 #### Example
 
- ```yaml
-  unit_config:
-    - name: graphical
-      path: /usr/lib/systemd/system/graphical.target
-      type: target
-      Unit:
-        Description: Graphical Interface
-        Documentation: man:systemd.special(7)
-        Requires: multi-user.target
-        Wants: display-manager.service
-        Conflicts: rescue.service rescue.target
-        After: multi-user.target rescue.service rescue.target display-manager.service
-        AllowIsolate: yes
+```bash
+  SYSTEMD_NAME=graphical
+  SYSTEMD_PATH=/usr/lib/systemd/system/graphical.target
+  SYSTEMD_TYPE=target
+  
+  UNIT_Description=Graphical Interface
+  UNIT_Documentation=man:systemd.special(7)
+  UNIT_Requires=multi-user.target
+  UNIT_Wants=display-manager.service
+  UNIT_Conflicts=rescue.service rescue.target
+  UNIT_After=multi-user.target rescue.service rescue.target display-manager.service
+  UNIT_AllowIsolate-yes
 ```
 
 **[[Timer](http://man7.org/linux/man-pages/man5/systemd.timer.5.html)]**
@@ -228,17 +222,16 @@ Triggers activation of other units based on timers.
 
 #### Example
 
- ```yaml
-  unit_config:
-    - name: dnf-makecache
-      type: timer
-      Timer:
-        OnBootSec: 10min
-        OnUnitInactiveSec: 1h
-        Unit: dnf-makecache.service
-      Install:
-        WantedBy: multi-user.target
-```
+```bash
+  SYSTEMD_NAME=dnf-makecache
+  SYSTEMD_TYPE=timer
+  
+  TIMER_OnBootSec=10min
+  TIMER_OnUnitInactiveSec=1h
+  TIMER_Unit=dnf-makecache.service
+  
+  INSTALL_WantedBy=multi-user.target
+ ```
 
 **[[Swap](http://man7.org/linux/man-pages/man5/systemd.swap.5.html)]**
 
@@ -255,15 +248,12 @@ Encapsulates memory swap partitions or files of the operating system.
 
 ------------------------------------
 
-  unit_config:
-    - name: var-vm-swap
-      type: swap
-      Unit:
-        Description=Turn on swap for /var/vm/swapfile
-      Swap:
-        What: /var/vm/swapfile
-      Install:
-        WantedBy: multi-user.target
+  SYSTEMD_NAME=var-vm-swap
+  SYSTEM_TYPE=swap
+  
+  UNIT_Description=Turn on swap for /var/vm/swapfile
+  SWAP_What=/var/vm/swapfile
+  INSTALL_WantedBy=multi-user.target
 ```
 
 **[[Path](http://man7.org/linux/man-pages/man5/systemd.path.5.html)]**
@@ -272,16 +262,15 @@ Activates other services when file system objects change or are modified.
 
 #### Example
 
- ```yaml
-  unit_config:
-    - name: Repository Code Coverage Analysis trigger
-      type: path
-      Unit:
-        Description: Activate code coverage analysis on modified git repositories
-      Path:
-        PathChanged: /path/to/git/repo
-        Unit: code-coverage-analysis
-```
+```bash
+  SYSTEMD_NAME=Repository Code Coverage Analysis trigger
+  SYSTEMD_TYPE=path
+  
+  UNIT_Description=Activate code coverage analysis on modified git repositories
+  
+  PATH_PathChanged=/path/to/git/repo
+  PATH_UNIT=code-coverage-analysis
+ ```
 
 **[[Scope](http://man7.org/linux/man-pages/man5/systemd.scope.5.html)]**
 
@@ -291,24 +280,18 @@ Manages a set of system or foreign/remote processes.
 
 #### Example
 
- ```yaml
- # *This configuration is for a transient unit file, created programmatically via the systemd API. Do not copy or edit.*
-  unit_config:
-    - name: user-session
-      type: scope
-
-      Unit:
-        Description: Session of user
-        Wants: user-runtime-dir@1000.service
-        Wants: user@1000.service
-        After: systemd-logind.service systemd-user-sessions.service user-runtime-dir@1000.service user@1000.service
-        RequiresMountsFor: /home/user
-        Scope:
-          Slice: user-1000.slice
-       Scope:
-          SendSIGHUP=yes
-          TasksMax=infinity
-```
+```bash
+  SYSTEMD_NAME=user-session
+  SYSTEMD_TYPE=scope
+  
+  UNIT_Description=Session of user
+  UNIT_Wants=user-runtime-dir@1000.service user@1000.service
+  UNIT_After=systemd-logind.service systemd-user-sessions.service user-runtime-dir@1000.service user@1000.service
+  UNIT_RequiresMountsFor=/home/user
+  
+  SCOPE_SendSIGHUP=yes
+  SCOPE_TasksMax=infinity
+ ```
 
 **[[Slice](http://man7.org/linux/man-pages/man5/systemd.slice.5.html)]**
 
@@ -323,49 +306,18 @@ Dependencies
 
 None
 
-Example Playbook
+Example Run
 ----------------
 default example (no custom unit configurations specified):
 ```
-- hosts: all
-  roles:
-  - role: 0x0I.systemd
-```
-
-service/socket/mount pair:
-```
-- hosts: webservers
-  roles:
-  - role: 0x01.systemd
-    vars:
-      unit_config:
-      - name: "my-service"
-        Unit:
-          After: network-online.target
-          Wants: network-online.target
-          Requires: my-service.socket
-        Service:
-          User: 'web'
-          Group: 'web'
-          ExecStart: '/usr/local/bin/my_service $ARGS'
-          ExecReload: '/bin/kill -s HUP $MAINPID'
-        Install:
-          WantedBy: 'multi-user.target'
-      - name: "my-service"
-        type: "socket"
-        Socket:
-          ListenStream: '0.0.0.0:4321'
-          Accept: 'true'
-        Install:
-          WantedBy: 'sockets.target'
-      - name: "var-data-my_service"
-        type: "mount"
-        path: "/run/systemd/system"
-        Mount:
-          What: '/dev/nvme0'
-          Where: '/var/data/my_service'
-        Install:
-          WantedBy: 'multi-user.target'
+podman run \
+  --env SYSTEMD_NAME=example-microservice \
+  --env UNIT_Description=This is an example of a microservice provisioned within a container, managed by Systemd \
+  --env SERVICE_ExecStart=/app/bin/service --config /path/to/config \
+  --env SERVICE_Restart=on-failure \
+  --env INSTALL_WantedBy=multi-user.target \
+  0labs.0x01.systemd:centos-7 \
+  systemctl start example-microservice
 ```
 
 License
@@ -376,4 +328,4 @@ MIT
 Author Information
 ------------------
 
-This role was created in 2019 by O1.IO.
+This Containerfile was created in 2020 by O1.IO.
