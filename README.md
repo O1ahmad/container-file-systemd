@@ -5,6 +5,7 @@ Container File:vertical_traffic_light:Systemd
 =========
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/0x0I/container-file-systemd?color=yellow)
 [![Build Status](https://travis-ci.org/0x0I/container-file-systemd.svg?branch=master)](https://travis-ci.org/0x0I/container-file-systemd)
+![Docker Pulls](https://img.shields.io/docker/pulls/0labs/0x01.systemd?style=flat)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blueviolet.svg)](https://opensource.org/licenses/MIT)
 
 **Table of Contents**
