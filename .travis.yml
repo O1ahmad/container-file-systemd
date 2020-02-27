@@ -1,10 +1,18 @@
 ---
+language: minimal
 services:
   - docker
+jobs:
+  include:
+    - env: OS_VERSION=centos:7
+    - env: OS_VERSION=centos:8
+    - env: OS_VERSION=fedora:29
+    - env: OS_VERSION=fedora:30
+    - env: OS_VERSION=fedora:31
 
 before_script:
   - sudo curl -fsSL https://goss.rocks/install | sudo sh
-  - docker build -f Containerfile --tag systemd:test .
 
 script:
-    - GOSS_FILES_PATH=test dgoss run --env-file test/unit-test-service.env systemd:test /entrypoint.sh /usr/bin/sleep infinity
+    - docker build --build-arg OS_VERSION=${OS_VERSION} -f Containerfile --tag 0x01-systemd-${OS_VERSION} .
+    - GOSS_FILES_PATH=test dgoss run --env-file test/unit-test-service.env 0x01-systemd-${OS_VERSION} /usr/bin/sleep infinity
