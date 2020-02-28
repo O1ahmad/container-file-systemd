@@ -2,14 +2,13 @@
 language: minimal
 services:
   - docker
-jobs:
-  include:
-    - env: OS_VERSION=centos:7
-    - env: OS_VERSION=centos:8
-    - env: OS_VERSION=fedora:29
-    - env: OS_VERSION=fedora:30
-    - env: OS_VERSION=fedora:31
-    - env: OS_VERSION=debian:8
+env:
+  - OS_VERSION=centos:7
+  - OS_VERSION=centos:8
+  - OS_VERSION=fedora:29
+  - OS_VERSION=fedora:30
+  - OS_VERSION=fedora:31
+  - OS_VERSION=debian:8
 
 before_script:
   - sudo curl -fsSL https://goss.rocks/install | sudo sh
