@@ -1,5 +1,10 @@
 #!/bin/bash
 
+set -euo pipefail
+
+# Print all commands executed if DEBUG mode enabled
+[ -n "${DEBUG:-""}" ] && set -x
+
 # [Test-Setup]
 cat <<OS | xargs -I % docker build --file Containerfile --build-arg OS_VERSION=% --tag testing-% .
 centos:7
