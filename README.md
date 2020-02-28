@@ -136,6 +136,7 @@ Encapsulates local IPC or network sockets in the system.
  SYSTEM_TYPE=socket
   
  UNIT_Description=Listens/accepts connection requests at /var/run/docker/sock (implicitly *Requires=* associated docker.service)
+ 
  SOCKET_ListenStream=/var/run/docker.sock
  SOCKET_SocketMode=0660
  SOCKET_SocketUser=root
