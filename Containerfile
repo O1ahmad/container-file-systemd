@@ -1,4 +1,4 @@
-# specific OS distribution to utilize as base image
+# Specific OS distribution to utilize as base image
 ARG OS_VERSION=centos:7
 
 FROM $OS_VERSION as unit_config
