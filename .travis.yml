@@ -11,7 +11,7 @@ env:
   - OS_VERSION=debian-8
 
 before_script:
-  - sudo curl -fsSL https://goss.rocks/install | sudo sh
+  - curl -fsSL https://goss.rocks/install | sudo sh
   - sudo pip install ansible
   - ansible-playbook builds/build-playbook.yml -v
 

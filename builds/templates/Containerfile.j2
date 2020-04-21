@@ -4,7 +4,6 @@ FROM {{ os_version }}
 LABEL maintainer="O1.IO"
 
 # Create directory for storage of additional entrypoint scripts
-RUN mkdir /entrypoint.d
 COPY entrypoints/01-systemd-units.sh /entrypoint.d
 
 # Include custom cmd/entrypoint for rendering and activating custom units
